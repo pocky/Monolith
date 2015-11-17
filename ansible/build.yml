@@ -1,0 +1,28 @@
+---
+- hosts: dev
+  sudo: yes
+  pre_tasks:
+    - include: pre_tasks/init.yml
+  roles:
+    - git
+    - postfix
+    - php
+    - nodejs
+    - nginx
+    - mariadb
+    - composer
+
+- hosts: prod
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  pre_tasks:
+    - include: pre_tasks/init.yml
+  roles:
+    - git
+    - postfix
+    - php
+    - nodejs
+    - nginx
+    - mariadb
+    - composer

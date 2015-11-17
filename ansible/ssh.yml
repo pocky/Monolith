@@ -1,0 +1,12 @@
+---
+- hosts: dev
+  sudo: yes
+  roles:
+    - user
+
+- hosts: prod
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - user

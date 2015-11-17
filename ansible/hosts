@@ -1,0 +1,12 @@
+[dev]
+localhost ansible_connection=local
+
+[prod]
+
+[provision:children]
+dev
+prod
+
+[deploy:children]
+dev
+prod

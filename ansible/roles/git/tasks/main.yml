@@ -1,0 +1,27 @@
+---
+- name: Install deps
+  apt: name={{ item }} state=present
+  with_items:
+    - libcurl4-gnutls-dev
+    - gettext
+    - libssl-dev
+    - libexpat1-dev
+  tags: build
+
+- name: Get last stable version
+  get_url: url=https://github.com/git/git/archive/v{{ blackroom_git_version }}.tar.gz dest=/tmp/v{{ blackroom_git_version }}.tar.gz
+  tags: build
+
+- name: Extract last stable version
+  command: tar -xvzf "{{ item.source }}" chdir="{{ item.chdir }}" creates="{{ item.create }}" warn="{{ item.warn }}"
+  with_items:
+    - { source: "/tmp/v{{ blackroom_git_version }}.tar.gz", chdir: "/tmp/", create: "/tmp/git-{{ blackroom_git_version }}/README", warn: "true" }
+  tags: build
+
+- name: Install last stable version
+  command: make prefix=/usr/local "{{ item.prefix }}" chdir="{{ item.chdir }}"
+  with_items:
+    - { prefix: "all", chdir: "/tmp/git-{{ blackroom_git_version }}" }
+    - { prefix: "install", chdir: "/tmp/git-{{ blackroom_git_version }}" }
+  tags: build
+

@@ -1,0 +1,34 @@
+---
+- name: Install MariaDB
+  apt: name={{ item }} state=present force=yes
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+  tags: build
+
+- name: Update root password
+  mysql_user: name=root password={{ blackroom_mariadb_password }} state=present
+  when: blackroom_mariadb_password is defined and (isFirstRun == 'true')
+  tags: build
+
+- name: Check if PHP is installed
+  shell: php --version
+  ignore_errors: true
+  register: php_result
+  tags: build
+
+- name: Install php5-mysql
+  apt: name=php5-mysql state=present
+  when: php_result|success
+  tags: build
+
+- name: Check if python is installed
+  shell: python --version
+  ignore_errors: true
+  register: python_result
+  tags: build
+
+- name: Install python-mysqldb
+  apt: name=python-mysqldb state=present
+  when: python_result|success
+  tags: build
