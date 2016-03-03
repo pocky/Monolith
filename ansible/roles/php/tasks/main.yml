@@ -9,9 +9,9 @@
 - name: Configure PHP
   lineinfile: "dest={{ item.dest }} regexp='{{ item.regexp }}' line='{{ item.line }}' state=present"
   with_items:
-    - { dest: /etc/php5/fpm/pool.d/www.conf, regexp: "^listen =", line: "listen = {{ blackroom_fastcgi_pass }}" }
-    - { dest: /etc/php5/fpm/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php_timezone }}" }
-    - { dest: /etc/php5/cli/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php_timezone }}" }
+      - { dest: /etc/php/7.0/fpm/pool.d/www.conf, regexp: "^listen =", line: "listen = {{ blackroom_fastcgi_pass }}" }
+      - { dest: /etc/php/7.0/fpm/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php_timezone }}" }
+      - { dest: /etc/php/7.0/cli/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php_timezone }}" }
   notify:
-    - restart php5-fpm
+    - restart php-fpm
   tags: build
