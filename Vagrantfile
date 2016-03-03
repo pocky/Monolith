@@ -6,7 +6,7 @@ Vagrant.require_version ">= 1.7.2"
 
 options = {
   :box              => 'boxcutter/debian82',
-  :box_version      => '~> 2.0.2',
+  :box_version      => '~> 2.0.5',
   :name             => 'monolith',
   :domain_tld       => 'project',
   :memory           => 1024,
@@ -24,19 +24,19 @@ is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Box
-  config.vm.box         = options[:box]
+  config.vm.box = options[:box]
   config.vm.box_version = options[:box_version]
-  config.vm.hostname    = options[:name] + '.' + options[:domain_tld]
+  config.vm.hostname = options[:name] + '.' + options[:domain_tld]
 
   # Network
   config.vm.network :private_network, type: :dhcp
 
   if Vagrant.has_plugin?('landrush')
-      config.landrush.enabled            = true
-      config.landrush.tld                = config.vm.hostname
+      config.landrush.enabled = true
+      config.landrush.tld = config.vm.hostname
       config.landrush.guest_redirect_dns = false
   elsif Vagrant.has_plugin?('vagrant-hostmanager')
-    config.hostmanager.enabled     = true
+    config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
     config.hostmanager.ip_resolver = proc do |vm, resolving_vm|
       if vm.id
@@ -78,16 +78,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # VMWare
   config.vm.provider :vmware_fusion do |v, override|
-    v.vmx["memsize"]     = options[:memory]
-    v.vmx["numvcpus"]    = options[:cpu]
+    v.vmx["memsize"] = options[:memory]
+    v.vmx["numvcpus"] = options[:cpu]
     v.vmx["displayName"] = config.vm.hostname
   end
 
   # VirtualBox.
   config.vm.provider :virtualbox do |v|
     v.memory = options[:memory]
-    v.cpus   = options[:cpu]
-    v.name   = config.vm.hostname
+    v.cpus = options[:cpu]
+    v.name = config.vm.hostname
 
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     v.customize ["modifyvm", :id, "--ioapic", "on"]
@@ -100,23 +100,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       sh.args = "ansible/build.yml"
     end
   else
-
-    # Copy your gitconfig file to VM
-    if File.exists?(File.join(Dir.home, '.gitconfig')) then
-      config.vm.provision :file do |file|
-        file.source      = '~/.gitconfig'
-        file.destination = '/home/vagrant/.gitconfig'
-      end
-    end
-
-    # Copy your composer credentials to VM
-    if File.exists?(File.join(Dir.home, '.composer/auth.json')) then
-      config.vm.provision :file do |file|
-        file.source      = '~/.composer/auth.json'
-        file.destination = '/home/vagrant/.composer/auth.json'
-      end
-    end
-
     # Provisioniers
     config.vm.provision :ansible do |ansible|
       ansible.playbook   = 'ansible/build.yml'
