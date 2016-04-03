@@ -1,6 +1,31 @@
 ---
-- name: Install Nginx
+- name: Init | Stop Apache2 service
+  service: name=apache2 state=stopped
+  register: result
+  ignore_errors: yes
+  tags:
+    - nginx
+    - init
+
+- name: Init | Uninstall apache2
+  apt: name=apache2 state=absent
+  when: result|success
+  tags:
+    - nginx
+    - init
+
+- name: Init | Remove unused files
+  file: dest=/etc/init.d/apache2 state=absent
+  when: result|success
+  tags:
+    - nginx
+    - init
+
+- name: Build | Install Nginx
   apt: name={{ item }} state=present
   with_items:
+    - nginx-common
     - nginx-full
-  tags: build
+  tags:
+    - nginx
+    - build

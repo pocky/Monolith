@@ -1,17 +1,23 @@
 ---
-- name: Check if node is installed
+- name: Build | Check if node is installed
   shell: npm --version
   ignore_errors: true
   register: npm_result
-  tags: build
+  tags:
+    - nodejs
+    - build
 
-- name: Node.js | setup
-  shell: curl -sL https://deb.nodesource.com/setup | bash -
+- name: Build | setup
+  shell: curl -sL https://deb.nodesource.com/setup_4.x | bash -
   when: npm_result|failed
-  tags: build
+  tags:
+    - nodejs
+    - build
 
-- name: Node.js | Install nodejs and npm
+- name: Build | Install nodejs and npm
   action: apt pkg={{ item }} state=installed
   with_items:
     - nodejs
-  tags: build
+  tags:
+    - nodejs
+    - build

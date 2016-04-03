@@ -1,6 +1,8 @@
 ---
-- name: Install postfix
+- name: Build | Install postfix
   apt: name={{ item }} state=present
   with_items:
     - postfix
-  tags: build
+  tags:
+    - postfix
+    - build

@@ -11,27 +11,28 @@ Monolith is shipped with:
 - Mariadb
 - Nginx
 - NodeJS
-- PHP
+- PHP 7.0.*
 - Postfix
 
-And an user role for add your local ssh key to your production.
+And an user role for add your local ssh key to your production server.
 
 Setup
 ===
 
-Install Ansible and Vagrant. Then go to Vagrantfile and change vars:
+Install Virtualbox (or VMware), Ansible, Vagrant and landrush. Then open `Vagrantfile` and update theses lines :
 
-```ruby
-options = {
-  :name             => 'monolith',
-  :domain_tld       => 'project'
-}
-```
+- 16: your favorite local domain tld,
+- 67: name of your VM (ea your project)
+- 70: hostname
+- 71: domain
+- 73: the folder name of your project (from git clone for example). If you don't have any project, remove this line.
 
 Then run `vagrant up`.
 
 After build, feel free to handle your project as your choice. My choice is to 
 add a new role to ansible (named by my app) for deploying (like in a prod environment) my project.
+
+If you want to have multiple VM, just copy line 66 to 114 and rename "front" to "back" for example. It works fine.
 
 Local config
 ===
@@ -41,17 +42,6 @@ If you want to add your local .gitconfig or composer.auth, you should create a `
 
 ```
 Vagrant.configure("2") do |config|
-
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.scope = :machine
-
-      config.cache.synced_folder_opts = {
-        type: :nfs,
-        mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-      }
-
-      config.cache.enable :generic
-    end
 
     # Git
     if File.exists?(File.join(Dir.home, '.gitconfig')) then

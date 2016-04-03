@@ -1,18 +1,26 @@
 ---
 - name: Install composer
   shell: curl -sS https://getcomposer.org/installer | php
-  tags: build
+  tags:
+    - composer
+    - build
 
 - name: Move composer.phar to composer
   command: mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
-  tags: build
+  tags:
+    - composer
+    - build
 
 - name: Make composer executable
   command: chmod a+x /usr/local/bin/composer
-  tags: build
+  tags:
+    - composer
+    - build
 
 - name: Add dependencies to locale profile
   lineinfile: "state=present dest=~/.profile
   regexp='^PATH=$PATH:./bin$'
   line='PATH=$PATH:./bin:./node_modules/.bin:~/.composer/vendor/bin'"
-  tags: build
+  tags:
+    - composer
+    - build

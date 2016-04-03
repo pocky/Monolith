@@ -1,0 +1,49 @@
+---
+- name: init | Create admin group
+  group: name=admin state=present
+  tags:
+   - init
+   - ssh
+
+- name: init | Create users with groups
+  user: "name={{ item.key }} createhome=yes groups=users,admin,www-data append=yes shell={{ item.value.bash }}"
+  with_dict: "{{ blackroom_ssh_pubkey }}"
+  tags:
+   - init
+   - ssh
+
+- name: init | Add authorized_keys for the given user
+  authorized_key: "user={{ item.key }} key='{{ item.value.pubkey }}'"
+  with_dict: "{{ blackroom_ssh_pubkey }}"
+  register: blackroom_add_identity_key
+  tags:
+   - init
+   - ssh
+
+- name: init | Add users to sudoers
+  lineinfile: "dest=/etc/sudoers state=present regexp='^%admin ALL' insertafter='^%sudo ALL' line='%admin ALL=(ALL:ALL) NOPASSWD:ALL' validate='visudo -cf %s'"
+  tags:
+   - init
+   - ssh
+
+- name: init | Disable empty password login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
+  notify: restart sshd
+  tags:
+   - init
+   - ssh
+
+- name: init | Disable remote root login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#?PermitRootLogin" line="PermitRootLogin no"
+  notify: restart sshd
+  tags:
+   - init
+   - ssh
+
+- name: init | Disable password login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#?PasswordAuthentication" line="PasswordAuthentication no"
+  when: blackroom_add_identity_key|success and not blackroom_add_identity_key|skipped
+  notify: restart sshd
+  tags:
+   - init
+   - ssh
