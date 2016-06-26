@@ -27,43 +27,43 @@
     - mariadb-server
     - python-mysqldb
   tags:
-    - mariadb
     - build
+    - mariadb
 
 - name: Build | Update root password
   mysql_user: name=root password={{ blackroom_mariadb_password }} state=present
-  when: blackroom_mariadb_password is defined and (isFirstRun == 'true')
+  when: blackroom_mariadb_password is defined
   ignore_errors: true
   tags:
-    - mariadb
     - build
+    - mariadb
 
 - name: Build | Check if PHP is installed
   shell: php --version
   ignore_errors: true
   register: php_result
   tags:
-    - mariadb
     - build
+    - mariadb
 
-- name: Build | Install php5-mysql
-  apt: name=php5-mysql state=present
+- name: Build | Install php70-mysql
+  apt: name=php7.0-mysql state=present
   when: php_result|success
   tags:
-    - mariadb
     - build
+    - mariadb
 
 - name: Build | Check if python is installed
   shell: python --version
   ignore_errors: true
   register: python_result
   tags:
-    - mariadb
     - build
+    - mariadb
 
 - name: Build | Install python-mysqldb
   apt: name=python-mysqldb state=present
   when: python_result|success
   tags:
-    - mariadb
     - build
+    - mariadb

@@ -5,8 +5,8 @@
     LC_CTYPE: en_US.UTF-8
   with_items: blackroom_php70_packages
   tags:
-    - php7
     - build
+    - php7
 
 - name: Build | Configure PHP70
   lineinfile: "dest={{ item.dest }} regexp='{{ item.regexp }}' line='{{ item.line }}' state=present"
@@ -14,8 +14,9 @@
       - { dest: /etc/php/7.0/fpm/pool.d/www.conf, regexp: "^listen =", line: "listen = {{ blackroom_php70_fastcgi_pass }}" }
       - { dest: /etc/php/7.0/fpm/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php70_timezone }}" }
       - { dest: /etc/php/7.0/cli/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php70_timezone }}" }
+      - { dest: /etc/php/7.0/cli/conf.d/20-xdebug.ini, regexp: '^zend_extension=xdebug.so', line: ';zend_extension=xdebug.so' }
   notify:
-    - restart php70-fpm
+    - restart php-fpm
   tags:
-    - php7
     - build
+    - php7

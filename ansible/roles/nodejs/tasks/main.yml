@@ -4,20 +4,20 @@
   ignore_errors: true
   register: npm_result
   tags:
-    - nodejs
     - build
+    - nodejs
 
 - name: Build | setup
   shell: curl -sL https://deb.nodesource.com/setup_4.x | bash -
   when: npm_result|failed
   tags:
-    - nodejs
     - build
+    - nodejs
 
 - name: Build | Install nodejs and npm
   action: apt pkg={{ item }} state=installed
   with_items:
     - nodejs
   tags:
-    - nodejs
     - build
+    - nodejs

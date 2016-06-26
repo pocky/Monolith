@@ -4,22 +4,22 @@
   register: result
   ignore_errors: yes
   tags:
-    - nginx
     - init
+    - nginx
 
 - name: Init | Uninstall apache2
   apt: name=apache2 state=absent
   when: result|success
   tags:
-    - nginx
     - init
+    - nginx
 
 - name: Init | Remove unused files
   file: dest=/etc/init.d/apache2 state=absent
   when: result|success
   tags:
-    - nginx
     - init
+    - nginx
 
 - name: Build | Install Nginx
   apt: name={{ item }} state=present

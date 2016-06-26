@@ -11,12 +11,12 @@ is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   options = {
-    :box              => 'boxcutter/debian82',
-    :box_version      => '~> 2.0.5',
-    :domain_tld       => 'project',
-    :memory           => 1024,
-    :cpu              => 1,
-    :debug            => false
+    :box => 'debian/jessie64',
+    :box_version => '~> 8.5.0',
+    :domain_tld => 'project',
+    :memory => 1024,
+    :cpu => 1,
+    :debug => false
   }
 
   # Box
@@ -48,12 +48,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.enable :generic
   end
 
-  # VMWare
-  config.vm.provider :vmware_fusion do |v, override|
-    v.vmx["memsize"] = options[:memory]
-    v.vmx["numvcpus"] = options[:cpu]
-  end
-
   # VirtualBox.
   config.vm.provider :virtualbox do |v|
     v.memory = options[:memory]
@@ -82,21 +76,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       front.vm.synced_folder host, guest, create: true, type: 'nfs', mount_options: ['nolock', 'actimeo=1', 'fsc']
     end
 
-    front.vm.provider :vmware_fusion do |v, override|
-      v.vmx["displayName"] = front.vm.hostname
-    end
-
     front.vm.provider :virtualbox do |v|
       v.name = front.vm.hostname
     end
 
     # Provisioniers
     front.vm.provision :ansible do |ansible|
-      ansible.playbook       = 'ansible/init.yml'
-      ansible.verbose        = options[:debug] ? 'vvvv' : false
-      ansible.sudo           = true
-      ansible.tags           = ["init"]
-      ansible.groups         = {
+      ansible.playbook = 'ansible/init.yml'
+      ansible.verbose = options[:debug] ? 'vvvv' : false
+      ansible.sudo = true
+      ansible.tags = ["init"]
+      ansible.groups = {
         "dev" => [frontoptions[:domain]],
         "provision:children" => ["dev"],
         "provision:vars" => { "isFirstRun" => true }
@@ -104,16 +94,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     front.vm.provision :ansible do |ansible|
-      ansible.playbook       = 'ansible/build.yml'
-      ansible.verbose        = options[:debug] ? 'vvvv' : false
-      ansible.sudo           = true
-      ansible.tags           = ["build"]
-      ansible.groups         = {
+      ansible.playbook = 'ansible/build.yml'
+      ansible.verbose = options[:debug] ? 'vvvv' : false
+      ansible.sudo = true
+      ansible.tags = ["build"]
+      ansible.groups = {
         "dev" => [frontoptions[:domain]],
         "provision:children" => ["dev"],
         "provision:vars" => { "isFirstRun" => true }
       }
     end
   end
-
 end

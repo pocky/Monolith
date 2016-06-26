@@ -22,10 +22,10 @@ Setup
 Install Virtualbox (or VMware), Ansible, Vagrant and landrush. Then open `Vagrantfile` and update theses lines :
 
 - 16: your favorite local domain tld,
-- 67: name of your VM (ea your project)
-- 70: hostname
-- 71: domain
-- 73: the folder name of your project (from git clone for example). If you don't have any project, remove this line.
+- 61: name of your VM (ea your project)
+- 64: hostname
+- 65: domain
+- 67: the folder name of your project (from git clone for example). If you don't have any project, remove this line.
 
 Then run `vagrant up`.
 

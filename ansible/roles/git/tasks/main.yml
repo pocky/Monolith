@@ -1,35 +1,49 @@
 ---
-- name: Build | Install deps
+- name: Build | Check if git is already installed
+  shell: git --version
+  ignore_errors: true
+  register: git_result
+  tags:
+    - build
+    - git
+
+- name: Build | Install deps
   apt: name={{ item }} state=present
+  when: git_result|failed
   with_items:
     - libcurl4-gnutls-dev
-    - gettext
-    - libssl-dev
     - libexpat1-dev
+    - gettext
+    - libz-dev
+    - libssl-dev
+    - autoconf
   tags:
-    - git
     - build
+    - git
 
 - name: Build | Get last stable version
   get_url: url=https://github.com/git/git/archive/v{{ blackroom_git_version }}.tar.gz dest=/tmp/v{{ blackroom_git_version }}.tar.gz
+  when: git_result|failed
   tags:
-    - git
     - build
+    - git
 
 - name: Build | Extract last stable version
   command: tar -xvzf "{{ item.source }}" chdir="{{ item.chdir }}" creates="{{ item.create }}" warn="{{ item.warn }}"
+  when: git_result|failed
   with_items:
     - { source: "/tmp/v{{ blackroom_git_version }}.tar.gz", chdir: "/tmp/", create: "/tmp/git-{{ blackroom_git_version }}/README", warn: "true" }
   tags:
-    - git
     - build
+    - git
 
-- name: Build | Install last stable version
-  command: make prefix=/usr/local "{{ item.prefix }}" chdir="{{ item.chdir }}"
+- name: Build | Configure last stable version
+  command: "{{ item }} chdir=/tmp/git-{{ blackroom_git_version }}"
+  when: git_result|failed
   with_items:
-    - { prefix: "all", chdir: "/tmp/git-{{ blackroom_git_version }}" }
-    - { prefix: "install", chdir: "/tmp/git-{{ blackroom_git_version }}" }
+    - "make configure"
+    - "./configure --prefix=/usr"
+    - "make install"
   tags:
-    - git
     - build
-
+    - git

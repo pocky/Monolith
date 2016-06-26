@@ -1,26 +1,27 @@
 ---
-- name: Install composer
+- name: Build | Install composer
   shell: curl -sS https://getcomposer.org/installer | php
   tags:
-    - composer
     - build
+    - composer
 
-- name: Move composer.phar to composer
+- name: Build | Move composer.phar to composer
   command: mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
   tags:
-    - composer
     - build
+    - composer
 
-- name: Make composer executable
+- name: Build | Make composer executable
   command: chmod a+x /usr/local/bin/composer
   tags:
-    - composer
     - build
+    - composer
 
-- name: Add dependencies to locale profile
-  lineinfile: "state=present dest=~/.profile
-  regexp='^PATH=$PATH:./bin$'
-  line='PATH=$PATH:./bin:./node_modules/.bin:~/.composer/vendor/bin'"
+- name: Build | Add dependencies to locale profile
+  lineinfile: "state=present dest=~/.bashrc
+  regexp='^PATH=$PATH:./bin:./node_modules/.bin:~/.composer/vendor/bin:./vendor/bin$'
+  line='PATH=$PATH:./bin:./node_modules/.bin:~/.composer/vendor/bin:./vendor/bin'"
+  become: no
   tags:
-    - composer
     - build
+    - composer
