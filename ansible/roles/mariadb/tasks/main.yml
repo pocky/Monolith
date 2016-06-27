@@ -1,4 +1,13 @@
 ---
+- name: Init | Add apt keys
+  apt_key: keyserver="{{ item.url }}" id="{{ item.id }}" state="present"
+  with_items:
+    - { url: "keyserver.ubuntu.com", id: "0xcbcb082a1bb943db" }
+  tags:
+    - init
+    - mariadb
+    - apt
+
 - name: Init | Create list files
   file: path=/etc/apt/sources.list.d/{{ item }} state=touch
   with_items:

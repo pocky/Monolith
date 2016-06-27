@@ -8,8 +8,8 @@
 - name: PreTasks | Init | Update apt cache.
   apt: update_cache=yes
   tags:
-    - apt
     - init
+    - apt
 
 - name: PreTasks | Init | Get software for Python-based control.
   apt: "pkg={{ item }} state=installed"
@@ -25,17 +25,17 @@
     - htop
     - rsync
   tags:
-    - apt
     - init
+    - apt
 
 - name: PreTasks | Init | Add apt keys
   apt_key: url="{{ item }}" state="present"
   with_items:
     - "http://www.dotdeb.org/dotdeb.gpg" # dotdeb
   tags:
+    - init
     - dotdeb
     - apt
-    - init
 
 - name: PreTasks | Init | Create list files
   file: path=/etc/apt/sources.list.d/{{ item }} state=touch
@@ -43,23 +43,24 @@
     - "dotdeb.list"
     - "mariadb.list"
   tags:
+    - init
     - dotdeb
     - apt
-    - init
 
 - name: PreTasks | Init | Add package repository
   lineinfile: dest="/etc/apt/sources.list.d/{{ item.dest }}" line="{{ item.line }}"
   with_items:
     - { dest: "dotdeb.list", line: "deb http://packages.dotdeb.org jessie all" }
     - { dest: "dotdeb.list", line: "deb-src http://packages.dotdeb.org jessie all" }
-    - { dest: "mariadb.list", line: "deb http://mirror6.layerjet.com/mariadb/repo/10.0/debian jessie main" }
+    - { dest: "mariadb.list", line: "deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.1/debian jessie main" }
+    - { dest: "mariadb.list", line: "deb-src http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.1/debian jessie main" }
   tags:
+    - init
     - dotdeb
     - apt
-    - init
 
 - name: PreTasks | Init | Update apt cache.
   apt: update_cache=yes
   tags:
-    - apt
     - init
+    - apt

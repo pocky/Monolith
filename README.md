@@ -14,7 +14,7 @@ Monolith is shipped with:
 - PHP 7.0.*
 - Postfix
 
-And an user role for add your local ssh key to your production server.
+And an SSH role for add your local ssh key to your production server.
 
 Setup
 ===

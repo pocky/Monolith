@@ -27,5 +27,5 @@
     - nginx-common
     - nginx-full
   tags:
-    - nginx
     - build
+    - nginx
