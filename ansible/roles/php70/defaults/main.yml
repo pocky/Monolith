@@ -8,6 +8,7 @@ blackroom_php70_packages:
   - php7.0-mbstring
   - php7.0-bcmath
   - php7.0-xml
+  - php7.0-zip
 
 blackroom_php70_timezone: UTC
 blackroom_php70_fastcgi_pass: 127.0.0.1:9000
