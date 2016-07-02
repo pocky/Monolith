@@ -14,7 +14,12 @@
       - { dest: /etc/php/7.0/fpm/pool.d/www.conf, regexp: "^listen =", line: "listen = {{ blackroom_php70_fastcgi_pass }}" }
       - { dest: /etc/php/7.0/fpm/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php70_timezone }}" }
       - { dest: /etc/php/7.0/cli/php.ini, regexp: '^;date.timezone', line: "date.timezone = {{ blackroom_php70_timezone }}" }
-      - { dest: /etc/php/7.0/cli/conf.d/20-xdebug.ini, regexp: '^zend_extension=xdebug.so', line: ';zend_extension=xdebug.so' }
+  tags:
+    - build
+    - php7
+
+- name: Build | Remove xdebug for cli
+  file: path=/etc/php/7.0/cli/conf.d/20-xdebug.ini state=absent
   notify:
     - restart php-fpm
   tags:
