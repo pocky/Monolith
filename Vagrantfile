@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   options = {
     :box => 'debian/jessie64',
-    :box_version => '~> 8.5.0',
+    :box_version => '~> 8.6.1',
     :domain_tld => 'project',
     :memory => 1024,
     :cpu => 1,
@@ -57,49 +57,49 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
-  # Configuration for the front env
-  config.vm.define "monolith" do |front|
+  # Configuration for the app env
+  config.vm.define "monolith" do |app|
 
-    frontoptions = {
+    app_options = {
       :hostname => 'www',
       :domain   => 'monolith',
       :folders  => {
-          'monolith' => '/var/www/'
+        'monolith' => '/var/www/'
       }
     }
 
     # Box
-    front.vm.hostname = ((false === frontoptions[:hostname].empty?) ? (frontoptions[:hostname] + '.') : '') + frontoptions[:domain] + '.' + options[:domain_tld]
-    config.landrush.tld = front.vm.hostname
+    app.vm.hostname = ((false === app_options[:hostname].empty?) ? (app_options[:hostname] + '.') : '') + app_options[:domain] + '.' + options[:domain_tld]
+    config.landrush.tld = app.vm.hostname
 
-    frontoptions[:folders].each do |host, guest|
-      front.vm.synced_folder host, guest, create: true, type: 'nfs', mount_options: ['nolock', 'actimeo=1', 'fsc']
+    app_options[:folders].each do |host, guest|
+      app.vm.synced_folder host, guest, create: true, type: 'nfs', mount_options: ['nolock', 'actimeo=1', 'fsc']
     end
 
-    front.vm.provider :virtualbox do |v|
-      v.name = front.vm.hostname
+    app.vm.provider :virtualbox do |v|
+      v.name = app.vm.hostname
     end
 
     # Provisioniers
-    front.vm.provision :ansible do |ansible|
+    app.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/init.yml'
       ansible.verbose = options[:debug] ? 'vvvv' : false
       ansible.sudo = true
       ansible.tags = ["init"]
       ansible.groups = {
-        "dev" => [frontoptions[:domain]],
+        "dev" => [app_options[:domain]],
         "provision:children" => ["dev"],
         "provision:vars" => { "isFirstRun" => true }
       }
     end
 
-    front.vm.provision :ansible do |ansible|
+    app.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/build.yml'
       ansible.verbose = options[:debug] ? 'vvvv' : false
       ansible.sudo = true
       ansible.tags = ["build"]
       ansible.groups = {
-        "dev" => [frontoptions[:domain]],
+        "dev" => [app_options[:domain]],
         "provision:children" => ["dev"],
         "provision:vars" => { "isFirstRun" => true }
       }
