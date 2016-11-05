@@ -3,7 +3,7 @@
   apt: "pkg={{ item }} state=present"
   environment:
     LC_CTYPE: en_US.UTF-8
-  with_items: blackroom_php70_packages
+  with_items: "{{ blackroom_php70_packages }}"
   tags:
     - build
     - php7
@@ -21,7 +21,7 @@
 - name: Build | Remove xdebug for cli
   file: path=/etc/php/7.0/cli/conf.d/20-xdebug.ini state=absent
   notify:
-    - restart php-fpm
+    - restart php70-fpm
   tags:
     - build
     - php7
