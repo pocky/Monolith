@@ -34,8 +34,7 @@ Then open `Vagrantfile` and update theses lines :
 - 65: domain
 - 67: the folder name of your project (from git clone for example). If you don't have any project, remove this line.
 
-Or if you love make, just edit `Makefile` vars.
-Then run `make init` if you don't like Makefiles.
+Or if you love make, just edit `Makefile` vars and run `make init`.
 
 After build, feel free to handle your project as your choice. My choice is to 
 add a new role to Ansible (named by my app) for deploying (like in a prod environment) my project.
