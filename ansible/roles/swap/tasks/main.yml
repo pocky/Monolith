@@ -1,0 +1,41 @@
+- name: Init | Test if swap already exist
+  stat: path=/swapfile
+  ignore_errors: true
+  register: monolith_swapfile
+  tags:
+    - init
+    - swap
+
+- name: Init | Create swap file
+  command: fallocate -l "{{ monolith_swap_space }}" /swapfile
+  when: monolith_swapfile.stat.exists == False
+  tags:
+    - init
+    - swap
+
+- name: Init | Change permissions
+  file: path=/swapfile mode=0600
+  tags:
+   - init
+   - swap
+
+- name: Init | Make swap
+  command: mkswap /swapfile
+  when: monolith_swapfile.stat.exists == False
+  tags:
+    - init
+    - swap
+
+- name: Init | Turn swap on
+  command: swapon /swapfile
+  when: monolith_swapfile.stat.exists == False
+  tags:
+    - init
+    - swap
+
+- name: Init | Add to fstab
+  action: lineinfile dest=/etc/fstab regexp="swapfile" line="/swapfile none swap sw 0 0" state=present
+  when: monolith_swapfile.stat.exists == False
+  tags:
+    - init
+    - swap
