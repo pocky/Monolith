@@ -6,14 +6,8 @@ is a simple Vagrant/Ansible bootstrap for create a new virtual machine for web a
 
 Monolith is shipped with:
 
-- Debian 8.6
+- Debian 9.1 (Stretch)
 - Git
-- Composer
-- Mariadb
-- NGINX
-- Node.js 7.0
-- PHP 7.0
-- Postfix
 
 And an SSH role for add your local ssh key to your production server.
 
@@ -21,11 +15,10 @@ Setup
 ===
 
 Install theses packages:
-- [Virtualbox](https://www.virtualbox.org/), 
-- [Ansible](https://www.ansible.com/), 
-- [Vagrant](https://www.vagrantup.com/)
-- [landrush](https://github.com/vagrant-landrush/landrush),
-- [cachier](https://github.com/fgrehm/vagrant-cachier) (optional).
+- [Virtualbox](https://www.virtualbox.org/) - v5.1.26, 
+- [Ansible](https://www.ansible.com/) - v2.3, 
+- [Vagrant](https://www.vagrantup.com/) - v2.0,
+- [landrush](https://github.com/vagrant-landrush/landrush)
 
 Then open `Vagrantfile` and update theses lines :
 - 16: your favorite local domain tld,
@@ -69,3 +62,18 @@ Vagrant.configure("2") do |config|
 
 end
 ```
+## Code of conduct
+
+See the [CODE OF CONDUCT](CODE_OF_CONDUCT.md) file.
+
+## Contributing
+
+See the [CONTRIBUTING](CONTRIBUTING.md) file.
+
+## License
+
+For *this* project, I choose […drumroll…] the [MIT License](LICENSE.md).
+
+## SUPPORT
+
+See the [SUPPORT](SUPPORT.md) file. (Don't forget to change default email/slack/...)
