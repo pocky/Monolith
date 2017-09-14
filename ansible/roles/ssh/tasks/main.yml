@@ -6,14 +6,14 @@
    - ssh
 
 - name: Init | Create users with groups
-  user: "name={{ item.key }} createhome=yes groups=users,admin,www-data append=yes shell={{ item.value.bash }}"
+  user: name="{{ item.key }}" createhome=yes groups=users,admin,www-data append=yes shell="{{ item.value.bash }}"
   with_dict: "{{ monolith_ssh_pubkey }}"
   tags:
    - init
    - ssh
 
 - name: Init | Add authorized_keys for the given user
-  authorized_key: "user={{ item.key }} key='{{ item.value.pubkey }}'"
+  authorized_key: user="{{ item.key }}" key="{{ item.value.pubkey }}"
   with_dict: "{{ monolith_ssh_pubkey }}"
   register: monolith_add_identity_key
   tags:
@@ -21,7 +21,7 @@
    - ssh
 
 - name: Init | Add users to sudoers
-  lineinfile: "dest=/etc/sudoers state=present regexp='^%admin ALL' insertafter='^%sudo ALL' line='%admin ALL=(ALL:ALL) NOPASSWD:ALL' validate='visudo -cf %s'"
+  lineinfile: dest=/etc/sudoers state=present regexp="^%admin ALL" insertafter="^%sudo ALL" line="%admin ALL=(ALL:ALL) NOPASSWD:ALL" validate="visudo -cf %s"
   tags:
    - init
    - ssh
