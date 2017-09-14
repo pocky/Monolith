@@ -6,12 +6,6 @@
     - include: pre_tasks/init.yml
   roles:
     - git
-    - postfix
-    - php70
-    - nodejs
-    - nginx
-    - mariadb
-    - composer
 
 - hosts: prod
   become: yes
@@ -21,9 +15,3 @@
   roles:
     - ssh
     - git
-    - postfix
-    - php70
-    - nodejs
-    - nginx
-    - mariadb
-    - composer

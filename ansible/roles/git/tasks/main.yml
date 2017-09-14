@@ -22,7 +22,7 @@
     - git
 
 - name: Build | Get last stable version
-  get_url: url=https://github.com/git/git/archive/v{{ blackroom_git_version }}.tar.gz dest=/tmp/v{{ blackroom_git_version }}.tar.gz
+  get_url: url=https://github.com/git/git/archive/v{{ monolith_git_version }}.tar.gz dest=/tmp/v{{ monolith_git_version }}.tar.gz
   when: git_result|failed
   tags:
     - build
@@ -32,13 +32,13 @@
   command: tar -xvzf "{{ item.source }}" chdir="{{ item.chdir }}" creates="{{ item.create }}" warn="{{ item.warn }}"
   when: git_result|failed
   with_items:
-    - { source: "/tmp/v{{ blackroom_git_version }}.tar.gz", chdir: "/tmp/", create: "/tmp/git-{{ blackroom_git_version }}/README", warn: "true" }
+    - { source: "/tmp/v{{ monolith_git_version }}.tar.gz", chdir: "/tmp/", create: "/tmp/git-{{ monolith_git_version }}/README", warn: "true" }
   tags:
     - build
     - git
 
 - name: Build | Configure last stable version
-  command: "{{ item }} chdir=/tmp/git-{{ blackroom_git_version }}"
+  command: "{{ item }} chdir=/tmp/git-{{ monolith_git_version }}"
   when: git_result|failed
   with_items:
     - "make configure"

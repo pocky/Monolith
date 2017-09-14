@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = "2"
-Vagrant.require_version ">= 1.8.1"
+Vagrant.require_version ">= 2.0.0"
 
 # Use rbconfig to determine if we're on a windows host or not.
 require 'rbconfig'
@@ -11,8 +11,8 @@ is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   options = {
-    :box => 'debian/jessie64',
-    :box_version => '~> 8.6.1',
+    :box => 'debian/stretch64',
+    :box_version => '~> 9.1.0',
     :domain_tld => 'project',
     :memory => 1024,
     :cpu => 1,
@@ -35,18 +35,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Landrush
   config.landrush.enabled = true
   config.landrush.guest_redirect_dns = false
-
-  # Cachier
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :machine
-
-    config.cache.synced_folder_opts = {
-      type: :nfs,
-      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-    }
-
-    config.cache.enable :generic
-  end
 
   # VirtualBox.
   config.vm.provider :virtualbox do |v|
@@ -84,7 +72,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/init.yml'
       ansible.verbose = options[:debug] ? 'vvvv' : false
-      ansible.sudo = true
+      ansible.become = true
       ansible.tags = ["init"]
       ansible.groups = {
         "dev" => [app_options[:domain]],
@@ -96,7 +84,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/build.yml'
       ansible.verbose = options[:debug] ? 'vvvv' : false
-      ansible.sudo = true
+      ansible.become = true
       ansible.tags = ["build"]
       ansible.groups = {
         "dev" => [app_options[:domain]],

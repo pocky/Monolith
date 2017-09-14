@@ -1,4 +1,4 @@
-blackroom_ssh_pubkey:
+monolith_ssh_pubkey:
   #username:
   #  bash: /bin/bash
   #  pubkey: ~

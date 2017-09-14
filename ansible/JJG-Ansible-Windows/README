@@ -24,7 +24,7 @@ else
   # Provisioning configuration for Ansible (for Mac/Linux hosts).
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
-    ansible.sudo = true
+    ansible.become = true
   end
 end
 ```

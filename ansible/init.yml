@@ -5,8 +5,6 @@
   pre_tasks:
     - include: pre_tasks/init.yml
   roles:
-    - nginx
-    - mariadb
 
 - hosts: prod
   become: yes
@@ -15,5 +13,3 @@
     - include: pre_tasks/init.yml
   roles:
     - ssh
-    - nginx
-    - mariadb
