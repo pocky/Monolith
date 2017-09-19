@@ -5,6 +5,7 @@
   pre_tasks:
     - include: pre_tasks/init.yml
   roles:
+    - swap
     - git
 
 - hosts: prod

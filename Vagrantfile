@@ -70,7 +70,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Provisioniers
     app.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/init.yml'
+      ansible.playbook = 'ansible/build.yml'
       ansible.verbose = options[:debug] ? 'vvvv' : false
       ansible.become = true
       ansible.tags = ["init"]
