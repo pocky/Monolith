@@ -14,6 +14,8 @@
 - name: PreTasks | Init | Get software for Python-based control.
   apt: pkg="{{ item }}" state=installed
   with_items:
+    - sudo
+    - lsb-release
     - curl
     - python-apt
     - python-pycurl
@@ -24,6 +26,7 @@
     - bash-completion
     - htop
     - rsync
+    - mailutils
   tags:
     - init
     - apt
